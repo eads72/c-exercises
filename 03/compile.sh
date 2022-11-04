@@ -1,0 +1,1 @@
+gcc -Wall -I./ main.c dynarray.c
