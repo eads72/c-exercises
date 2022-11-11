@@ -1,1 +1,1 @@
-gcc -Wall -I./ main.c dynarray.c
+gcc -Wall -I./ main.c dynarray.c book.c

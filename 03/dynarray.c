@@ -1,21 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dynarray.h"
+#include "book.h"
 
-// takes name, year, author, and rating as paramteres and returns a book
-book create_book(char* name, int year){
-    book new_book;
-    new_book.name = name;
-    new_book.year = year;
-    return new_book;
-}
-
-// takes a book as a paremeter and prints the book.
-int print_book(book book){
-    printf("The name of the book is: %s\n", book.name);
-    printf("The year of the book is: %d\n", book.year);
-    return 1;
-}
 
 // creates a book array struct with 0 books, returns the struct
 bookArr create_book_array(int length){
@@ -58,6 +45,7 @@ unsigned char add_single_book(bookArr* bookArray, book newBook){
     return 1;
 }
 
+
 void print_array(bookArr array){
     printf("Buffer length is: %d \n", array.buffer_length);
     printf("Number of books is: %d \n", array.num_of_books);
@@ -69,6 +57,7 @@ void print_array(bookArr array){
     printf("\n");
 }
 
+// Takes the book array pointer and the position of book as parameters,a nd returns the book
 book get(bookArr* array, int what_you_want){
 
     if(what_you_want < array->num_of_books && what_you_want >= 0){
@@ -79,7 +68,15 @@ book get(bookArr* array, int what_you_want){
     exit(1);
 }
 
-book remove_element(bookArr* array, int index_of_book_to_be_removed){
+//Takes the book array pointer and the position of book as parameters
+//Removes the book from the position and returns the book
+book remove_element(bookArr* array, unsigned int index_of_book_to_be_removed){
+
+    if(index_of_book_to_be_removed >= array->num_of_books){
+        printf("The index %d is not valid, number of books is %d.\n", 
+            index_of_book_to_be_removed, array->num_of_books);
+        exit(1);
+    }
     
     book removed_book = array->bookPtr[index_of_book_to_be_removed];
 
@@ -88,14 +85,32 @@ book remove_element(bookArr* array, int index_of_book_to_be_removed){
     }
 
     array->num_of_books--;
+
+    if(array->buffer_length/2 >= array->num_of_books){
+        unsigned int new_buffer_size = array->buffer_length/2;
+        unsigned int new_realloc_size = new_buffer_size * sizeof(book);
+
+        book* new_array = (book*) realloc(array->bookPtr, new_realloc_size);
+        printf("reallocated\n");
+
+        if (new_array == 0){
+            printf("realloc failed\n");
+        }
+        
+        array->buffer_length = new_buffer_size;
+        array->bookPtr = new_array;
+    }
+
+    printf("Removed Book:");
+    print_book(removed_book);
     return  removed_book;
 }
 
-int dummy() {
+/* int dummy() {
     char aName[10] = "Adam";
     book myBook = create_book(aName, 2009);
 
     print_book(myBook);
 
     return sizeof(book);
-}
+}*/
