@@ -1,0 +1,1 @@
+gcc -I./ -Wall -Werror main.c merge-sort.c
